@@ -13,17 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.japo.java.layers.user;
+package org.japo.java.layers.managers;
 
 import java.util.Properties;
-import org.japo.java.services.BServices;
-import org.japo.java.services.UServices;
+import org.japo.java.layers.services.S2Bussiness;
+import org.japo.java.layers.services.S1User;
 
 /**
  *
  * @author José A. Pacheco Ondoño - joanpaon@gmail.com
  */
-public final class UManager implements UServices {
+public final class M1User implements S1User {
 
     //<editor-fold defaultstate="collapsed" desc="--- User Interface Manager ---">
     // Propiedades Credencial
@@ -34,10 +34,10 @@ public final class UManager implements UServices {
     private final Properties prp;
 
     // Gestor Lógica de Negocio
-    private final BServices bs;
+    private final S2Bussiness bs;
 
     // Constructor Parametrizado
-    public UManager(Properties prp, BServices bs) {
+    public M1User(Properties prp, S2Bussiness bs) {
         // Propiedades Aplicación
         this.prp = prp;
 
@@ -52,6 +52,7 @@ public final class UManager implements UServices {
         String user = prp.getProperty(PRP_CONN_USER);
         String pass = prp.getProperty(PRP_CONN_PASS);
 
+        // Devolver Validación de Usuario
         return bs.validarUsuario(user, pass);
     }
 

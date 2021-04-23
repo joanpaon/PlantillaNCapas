@@ -13,17 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.japo.java.services;
+package org.japo.java.layers.services;
 
 /**
  *
  * @author José A. Pacheco Ondoño - japolabs@gmail.com
  */
-public interface BServices {
+public interface S1User {
 
-    public boolean validarUsuario(String user, String pass);
+    public boolean loginApp();
 
-    public void cerrarBD();
+    public void launchApp();
+
+    public void closeApp();
 
     // ---
 }

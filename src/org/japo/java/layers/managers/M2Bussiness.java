@@ -13,27 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.japo.java.layers.bussiness;
+package org.japo.java.layers.managers;
 
 import java.util.Properties;
-import org.japo.java.services.BServices;
-import org.japo.java.services.DServices;
+import org.japo.java.layers.services.S2Bussiness;
+import org.japo.java.layers.services.S3Data;
 
 /**
  *
  * @author José A. Pacheco Ondoño - joanpaon@gmail.com
  */
-public final class BManager implements BServices {
+public final class M2Bussiness implements S2Bussiness {
 
     //<editor-fold defaultstate="collapsed" desc="--- Bussiness Logic Manager ---">
     // Propiedades de la Aplicación
     private final Properties prp;
 
     // Servicios de Acceso a Datos
-    private final DServices ds;
+    private final S3Data ds;
 
     // Constructor Parametrizado
-    public BManager(Properties prp, DServices ds) {
+    public M2Bussiness(Properties prp, S3Data ds) {
         // Propiedades Aplicación
         this.prp = prp;
 

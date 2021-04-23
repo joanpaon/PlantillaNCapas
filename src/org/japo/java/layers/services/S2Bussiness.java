@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.japo.java.services;
+package org.japo.java.layers.services;
 
 /**
  *
  * @author José A. Pacheco Ondoño - japolabs@gmail.com
  */
-public interface DServices {
+public interface S2Bussiness {
 
     public boolean validarUsuario(String user, String pass);
 

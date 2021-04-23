@@ -13,19 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.japo.java.layers.data;
+package org.japo.java.layers.managers;
 
 import java.sql.Connection;
 import java.sql.Statement;
 import java.util.Properties;
 import org.japo.java.libraries.UtilesBD;
-import org.japo.java.services.DServices;
+import org.japo.java.layers.services.S3Data;
 
 /**
  *
  * @author José A. Pacheco Ondoño - joanpaon@gmail.com
  */
-public final class DManager implements DServices {
+public final class M3Data implements S3Data {
 
     //<editor-fold defaultstate="collapsed" desc="--- Data Access Manager ---">
     // Propiedades Credencial
@@ -40,7 +40,7 @@ public final class DManager implements DServices {
     private Statement stmt = null;
 
     // Constructor Parametrizado - Properties
-    public DManager(Properties prp) {
+    public M3Data(Properties prp) {
         this.prp = prp;
     }
 

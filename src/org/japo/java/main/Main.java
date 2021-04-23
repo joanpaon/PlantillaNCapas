@@ -20,9 +20,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Properties;
 import org.japo.java.exceptions.AccessException;
 import org.japo.java.libraries.UtilesApp;
-import org.japo.java.services.BServices;
-import org.japo.java.services.DServices;
-import org.japo.java.services.UServices;
+import org.japo.java.layers.services.S3Data;
+import org.japo.java.layers.services.S2Bussiness;
+import org.japo.java.layers.services.S1User;
 
 /**
  *
@@ -35,14 +35,14 @@ public final class Main {
     private static final String PRP_APP_PASSWORD = "app.password";
 
     // Estructura de Capas - Propiedades
-    private static final String PRP_LAYERS_DATA_CLASS = "layers.data.class";
-    private static final String PRP_LAYERS_BUSSINESS_CLASS = "layers.bussiness.class";
-    private static final String PRP_LAYERS_USER_CLASS = "layers.user.class";
+    private static final String PRP_LAYER_MANAGER_USER = "layer.manager.user";
+    private static final String PRP_LAYER_MANAGER_BNES = "layer.manager.bnes";
+    private static final String PRP_LAYER_MANAGER_DATA = "layer.manager.data";
 
     // Estructura de Capas - Valores por defecto
-    private static final String DEF_LAYERS_DATA_CLASS = "org.japo.java.layers.data.DManager";
-    private static final String DEF_LAYERS_BUSSINESS_CLASS = "org.japo.java.layers.bussiness.BManager";
-    private static final String DEF_LAYERS_USER_CLASS = "org.japo.java.layers.user.UManager";
+    private static final String DEF_LAYER_MANAGER_USER = "org.japo.java.layers.managers.M1User";
+    private static final String DEF_LAYER_MANAGER_BNES = "org.japo.java.layers.managers.M2Bussiness";
+    private static final String DEF_LAYER_MANAGER_DATA = "org.japo.java.layers.managers.M3Data";
 
     // Constructor Oculto
     private Main() {
@@ -59,9 +59,9 @@ public final class Main {
             prp.putAll(prpExt);
 
             // Nombres de Clases
-            String dName = prp.getProperty(PRP_LAYERS_DATA_CLASS, DEF_LAYERS_DATA_CLASS);
-            String bName = prp.getProperty(PRP_LAYERS_BUSSINESS_CLASS, DEF_LAYERS_BUSSINESS_CLASS);
-            String uName = prp.getProperty(PRP_LAYERS_USER_CLASS, DEF_LAYERS_USER_CLASS);
+            String dName = prp.getProperty(PRP_LAYER_MANAGER_DATA, DEF_LAYER_MANAGER_DATA);
+            String bName = prp.getProperty(PRP_LAYER_MANAGER_BNES, DEF_LAYER_MANAGER_BNES);
+            String uName = prp.getProperty(PRP_LAYER_MANAGER_USER, DEF_LAYER_MANAGER_USER);
 
             // Clases
             Class<?> dClass = Class.forName(dName);
@@ -70,13 +70,13 @@ public final class Main {
 
             // Constructores
             Constructor dCons = dClass.getConstructor(Properties.class);
-            Constructor bCons = bClass.getConstructor(Properties.class, DServices.class);
-            Constructor uCons = uClass.getConstructor(Properties.class, BServices.class);
+            Constructor bCons = bClass.getConstructor(Properties.class, S3Data.class);
+            Constructor uCons = uClass.getConstructor(Properties.class, S2Bussiness.class);
 
             // Instanciación de Capas
-            DServices ds = (DServices) dCons.newInstance(prp);
-            BServices bs = (BServices) bCons.newInstance(prp, ds);
-            UServices us = (UServices) uCons.newInstance(prp, bs);
+            S3Data ds = (S3Data) dCons.newInstance(prp);
+            S2Bussiness bs = (S2Bussiness) bCons.newInstance(prp, ds);
+            S1User us = (S1User) uCons.newInstance(prp, bs);
 
             // Properties > Password
             String pass = prp.getProperty(PRP_APP_PASSWORD);
