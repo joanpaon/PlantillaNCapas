@@ -16,6 +16,7 @@
 package org.japo.java.layers.managers;
 
 import java.util.Properties;
+import org.japo.java.exceptions.ConnectivityException;
 import org.japo.java.layers.services.S2Bussiness;
 import org.japo.java.layers.services.S3Data;
 
@@ -43,13 +44,14 @@ public final class M2Bussiness implements S2Bussiness {
 
     // VAlidar Usuario
     @Override
-    public final boolean validarUsuario(String user, String pass) {
-        return ds.validarUsuario(user, pass);
+    public final void conectar(String user, String pass)
+            throws ConnectivityException {
+        ds.conectar(user, pass);
     }
 
     // Terminar Conexión BD
     @Override
-    public final void cerrarBD() {
+    public final void cerrarBD() throws ConnectivityException {
         ds.cerrarBD();
     }
     //</editor-fold>

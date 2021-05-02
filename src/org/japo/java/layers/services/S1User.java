@@ -15,17 +15,19 @@
  */
 package org.japo.java.layers.services;
 
+import org.japo.java.exceptions.ConnectivityException;
+
 /**
  *
  * @author José A. Pacheco Ondoño - japolabs@gmail.com
  */
 public interface S1User {
 
-    public boolean loginApp();
+    public void loginApp() throws ConnectivityException;
 
     public void launchApp();
 
-    public void closeApp();
+    public void closeApp() throws ConnectivityException;
 
     // ---
 }

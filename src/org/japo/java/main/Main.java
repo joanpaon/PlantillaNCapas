@@ -19,6 +19,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Properties;
 import org.japo.java.exceptions.AccessException;
+import org.japo.java.exceptions.ConnectivityException;
 import org.japo.java.libraries.UtilesApp;
 import org.japo.java.layers.services.S3Data;
 import org.japo.java.layers.services.S2Bussiness;
@@ -82,21 +83,19 @@ public final class Main {
             String pass = prp.getProperty(PRP_APP_PASSWORD);
 
             // Validar Contraseña
-            if (args[0] != null && args[0].equals(pass)) {
-                // Identificaciónd e Usuario
-                if (us.loginApp()) {
-                    // Ejecuta la Aplicación
-                    us.launchApp();
+            if (args.length > 0 && args[0] != null && args[0].equals(pass)) {
+                // Acceso a Datos
+                us.loginApp();
 
-                    // Cierra La Aplicación
-                    us.closeApp();
-                } else {
-                    throw new AccessException("Credenciales de Usuario NO válidas");
-                }
+                // Ejecuta la Aplicación
+                us.launchApp();
+
+                // Cierra La Aplicación
+                us.closeApp();
             } else {
                 throw new AccessException("Credenciales de Aplicación NO válidas");
             }
-        } catch (AccessException | NullPointerException
+        } catch (AccessException | ConnectivityException | NullPointerException
                 | ClassNotFoundException | IllegalAccessException
                 | IllegalArgumentException | InstantiationException
                 | NoSuchMethodException | SecurityException
@@ -106,5 +105,5 @@ public final class Main {
             System.out.println("Contacte con el Servicio Técnico");
         }
     }
-    //</editor-fold>
+//</editor-fold>
 }

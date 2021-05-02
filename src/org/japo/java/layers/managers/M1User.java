@@ -16,6 +16,7 @@
 package org.japo.java.layers.managers;
 
 import java.util.Properties;
+import org.japo.java.exceptions.ConnectivityException;
 import org.japo.java.layers.services.S2Bussiness;
 import org.japo.java.layers.services.S1User;
 
@@ -47,20 +48,26 @@ public final class M1User implements S1User {
 
     // Validación de Usuario
     @Override
-    public final boolean loginApp() {
+    public final void loginApp() throws ConnectivityException {
         // Usuario > Credenciales
         String user = prp.getProperty(PRP_CONN_USER);
         String pass = prp.getProperty(PRP_CONN_PASS);
 
         // Devolver Validación de Usuario
-        return bs.validarUsuario(user, pass);
+        bs.conectar(user, pass);
+
+        // Mensaje - Bitácora ( Comentar en producción )
+        System.out.println("Acceso a Datos Establecido");
     }
 
     // Cierre de la Aplicación
     @Override
-    public final void closeApp() {
+    public final void closeApp() throws ConnectivityException {
         // Cierre Base de Datos
         bs.cerrarBD();
+
+        // Mensaje - Bitácora ( Comentar en producción )
+        System.out.println("Acceso a Datos Liberado");
 
         // Despedida
         System.out.println("---");

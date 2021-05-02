@@ -15,15 +15,17 @@
  */
 package org.japo.java.layers.services;
 
+import org.japo.java.exceptions.ConnectivityException;
+
 /**
  *
  * @author José A. Pacheco Ondoño - japolabs@gmail.com
  */
 public interface S2Bussiness {
 
-    public boolean validarUsuario(String user, String pass);
+    public void conectar(String user, String pass) throws ConnectivityException;
 
-    public void cerrarBD();
+    public void cerrarBD() throws ConnectivityException;
 
     // ---
 }

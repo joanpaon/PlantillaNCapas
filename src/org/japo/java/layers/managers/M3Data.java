@@ -16,9 +16,12 @@
 package org.japo.java.layers.managers;
 
 import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Properties;
-import org.japo.java.libraries.UtilesBD;
+import org.japo.java.exceptions.ConnectivityException;
 import org.japo.java.layers.services.S3Data;
 
 /**
@@ -28,9 +31,27 @@ import org.japo.java.layers.services.S3Data;
 public final class M3Data implements S3Data {
 
     //<editor-fold defaultstate="collapsed" desc="--- Data Access Manager ---">
-    // Propiedades Credencial
+    // Conexión BBDD - Propiedades 
+    public static final String PRP_CONN_CPAT = "jdbc.conn.cpat";
+    public static final String PRP_CONN_PROT = "jdbc.conn.prot";
+    public static final String PRP_CONN_HOST = "jdbc.conn.host";
+    public static final String PRP_CONN_PORT = "jdbc.conn.port";
+    public static final String PRP_CONN_DBNM = "jdbc.conn.dbnm";
     public static final String PRP_CONN_USER = "jdbc.conn.user";
     public static final String PRP_CONN_PASS = "jdbc.conn.pass";
+
+    // Sentencia BBDD - Tipo de Acceso
+    public static final String STMT_ACCT_TFLY = "TYPE_FORWARD_ONLY";
+    public static final String STMT_ACCT_TSIN = "TYPE_SCROLL_INSENSITIVE";
+    public static final String STMT_ACCT_TSSE = "TYPE_SCROLL_SENSITIVE";
+    private static final String DEF_STMT_TACC = STMT_ACCT_TSSE;
+    public static final String PRP_STMT_TACC = "jdbc.stmt.tacc";
+
+    // Sentencia BBDD - Concurrencia
+    public static final String STMT_CONC_RNLY = "CONCUR_READ_ONLY";
+    public static final String STMT_CONC_UPDT = "CONCUR_UPDATABLE";
+    private static final String DEF_STMT_CONC = STMT_CONC_UPDT;
+    public static final String PRP_STMT_CONC = "jdbc.stmt.conc";
 
     // Referencias
     private final Properties prp;
@@ -45,48 +66,125 @@ public final class M3Data implements S3Data {
     }
 
     @Override
-    public boolean validarUsuario(String user, String pass) {
-        // Semáforo validación
-        boolean usuarioOK;
-
+    public final void conectar(String user, String pass) throws ConnectivityException {
+        // Cadena de Conexión
+        String cstr;
         try {
-            // User + Pass > Properties
-            prp.setProperty(PRP_CONN_USER, user);
-            prp.setProperty(PRP_CONN_PASS, pass);
+            // Parámetros Conexión
+            String cpat = prp.getProperty(PRP_CONN_CPAT);
+            String prot = prp.getProperty(PRP_CONN_PROT);
+            String host = prp.getProperty(PRP_CONN_HOST);
+            String port = prp.getProperty(PRP_CONN_PORT);
+            String dbnm = prp.getProperty(PRP_CONN_DBNM);
 
-            // Conectar BD
-            conn = UtilesBD.conectar(prp);
-
-            // Validar Conexión BD
-            if (conn != null) {
-                // Establecer Sentencia BD
-                stmt = UtilesBD.vincular(conn, prp);
-
-                // Validar Sentencia BD
-                usuarioOK = stmt != null;
-            } else {
-                usuarioOK = false;
-            }
-        } catch (NullPointerException e) {
-            usuarioOK = false;
+            // Cadena de Conexión
+            cstr = String.format(cpat, prot, host, port, dbnm, user, pass);
+        } catch (Exception e) {
+            throw new ConnectivityException("Parámetros de conexión incorrectos: " + e.getMessage());
         }
 
-        // No Validación > Eliminar Propiedades
-        if (!usuarioOK) {
-            //prp.remove(PRP_CONN_USER);
-            //prp.remove(PRP_CONN_PASS);
+        // Conexión BD
+        try {
+            conn = DriverManager.getConnection(cstr);
+        } catch (SQLException e) {
+            throw new ConnectivityException("Conexión con Base de Datos NO establecida: " + e.getMessage());
         }
 
-        // Devolver validación
-        return usuarioOK;
+        // Sentencia BD
+        try {
+            // Tipo de Acceso
+            int tacc = obtenerTipoAcceso(prp);
+
+            // Concurrencia
+            int conc = obtenerConcurrencia(prp);
+
+            stmt = conn.createStatement(tacc, conc);
+        } catch (SQLException e) {
+            throw new ConnectivityException("Sentencia de Base de Datos NO establecida: " + e.getMessage());
+        }
+    }
+
+    // Statement - Tipo de Acceso
+    private int obtenerTipoAcceso(Properties prp) {
+        // ---- TIPOS DE ACCESO ----
+        // ResultSet.TYPE_FORWARD_ONLY (*) - Indica que el objeto ResultSet se
+        //      puede recorrer unicamente hacia adelante.
+        // ResultSet.TYPE_SCROLL_INSENSITIVE - Indica que el objeto ResultSet se
+        //      puede recorrer, pero en general no es sensible a los cambios en
+        //      los datos que subyacen en él.
+        // ResultSet.TYPE_SCROLL_SENSITIVE - Indica que el objeto ResultSet se
+        //      puede  recorrer, y además, los cambios en él repercuten
+        //      en la base de datos subyacente.
+        //
+        // Properties > Selector Tipo de Acceso 
+        String selTacc = prp != null ? prp.getProperty(PRP_STMT_TACC, DEF_STMT_TACC) : DEF_STMT_TACC;
+
+        // Tipo de Acceso
+        int tacc;
+
+        // Obtener valor
+        switch (selTacc) {
+            case STMT_ACCT_TFLY:
+                tacc = ResultSet.TYPE_FORWARD_ONLY;
+                break;
+            case STMT_ACCT_TSIN:
+                tacc = ResultSet.TYPE_SCROLL_INSENSITIVE;
+                break;
+            case STMT_ACCT_TSSE:
+                tacc = ResultSet.TYPE_SCROLL_SENSITIVE;
+                break;
+            default:
+                tacc = ResultSet.TYPE_FORWARD_ONLY;
+        }
+
+        // Devolver Tipo de Acceso
+        return tacc;
+    }
+
+    // Statement - Concurrencia
+    private int obtenerConcurrencia(Properties prp) {
+        // ---- MODOS DE CONCURRENCIA ----
+        // ResultSet.CONCUR_READ_ONLY (*) - Indica que en el modo de concurrencia
+        //      para el objeto ResultSet éste no puede ser actualizado.
+        // ResultSet.CONCUR_UPDATABLE - Indica que en el modo de concurrencia
+        //      para el objeto ResultSet éste podria ser actualizado.
+        //        
+        // Properties > Selector Concurrencia
+        String selConc = prp != null ? prp.getProperty(PRP_STMT_CONC, DEF_STMT_CONC) : DEF_STMT_CONC;
+
+        // Concurrencia
+        int conc;
+        switch (selConc) {
+            case STMT_CONC_RNLY:
+                conc = ResultSet.CONCUR_READ_ONLY;
+                break;
+            case STMT_CONC_UPDT:
+                conc = ResultSet.CONCUR_UPDATABLE;
+                break;
+            default:
+                conc = ResultSet.CONCUR_READ_ONLY;
+        }
+
+        // Devolver Concurrencia
+        return conc;
     }
 
     // Cerrar Artefactos BD
     @Override
-    public final void cerrarBD() {
-        // Cerrando Artefactos
-        UtilesBD.cerrar(stmt);
-        UtilesBD.cerrar(conn);
+    public final void cerrarBD() throws ConnectivityException {
+        // Cerrar Sentencia de Base de datos
+        try {
+            stmt.close();
+        } catch (SQLException | NullPointerException e) {
+            throw new ConnectivityException("Error en el Cierre de la Sentencia: " + e.getMessage());
+        }
+
+        // Cerrar Conexión con Base de datos
+        try {
+            conn.close();
+        } catch (SQLException | NullPointerException e) {
+            throw new ConnectivityException("Error en el Cierre de Conexión: " + e.getMessage());
+        }
     }
     //</editor-fold>
 
