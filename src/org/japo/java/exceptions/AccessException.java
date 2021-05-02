@@ -20,5 +20,8 @@ package org.japo.java.exceptions;
  * @author José A. Pacheco Ondoño - joanpaon@gmail.com
  */
 public class AccessException extends Exception {
-    
+
+    public AccessException(String message) {
+        super(message);
+    }
 }

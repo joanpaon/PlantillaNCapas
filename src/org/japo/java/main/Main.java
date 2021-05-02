@@ -82,7 +82,7 @@ public final class Main {
             String pass = prp.getProperty(PRP_APP_PASSWORD);
 
             // Validar Contraseña
-            if (args[0].equals(pass)) {
+            if (args[0] != null && args[0].equals(pass)) {
                 // Identificaciónd e Usuario
                 if (us.loginApp()) {
                     // Ejecuta la Aplicación
@@ -91,21 +91,17 @@ public final class Main {
                     // Cierra La Aplicación
                     us.closeApp();
                 } else {
-                    throw new AccessException();
+                    throw new AccessException("Credenciales de Usuario NO válidas");
                 }
             } else {
-                throw new AccessException();
+                throw new AccessException("Credenciales de Aplicación NO válidas");
             }
-        } catch (AccessException e) {
-            System.out.println("ERROR: Acceso Denegado");
-            System.out.println("---");
-            System.out.println("Contacte con el Administrador del Sistema");
-        } catch (NullPointerException
+        } catch (AccessException | NullPointerException
                 | ClassNotFoundException | IllegalAccessException
                 | IllegalArgumentException | InstantiationException
                 | NoSuchMethodException | SecurityException
                 | InvocationTargetException e) {
-            System.out.println("ERROR: Inicialización abortada");
+            System.out.printf("ERROR: %s%n", e.getMessage());
             System.out.println("---");
             System.out.println("Contacte con el Servicio Técnico");
         }
