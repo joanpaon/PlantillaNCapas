@@ -21,6 +21,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Properties;
+import org.japo.java.entities.Credencial;
 import org.japo.java.exceptions.ConnectivityException;
 import org.japo.java.layers.services.S3Data;
 
@@ -66,41 +67,37 @@ public final class M3Data implements S3Data {
     }
 
     @Override
-    public final void conectar(String user, String pass) throws ConnectivityException {
-        // Cadena de Conexión
-        String cstr;
+    public final void abrirAccesoDatos(Credencial c)
+            throws ConnectivityException {
         try {
-            // Parámetros Conexión
+            // Propiedades > Parámetros Conexión
             String cpat = prp.getProperty(PRP_CONN_CPAT);
             String prot = prp.getProperty(PRP_CONN_PROT);
             String host = prp.getProperty(PRP_CONN_HOST);
             String port = prp.getProperty(PRP_CONN_PORT);
             String dbnm = prp.getProperty(PRP_CONN_DBNM);
 
+            // Credencial > Parámetros Conexión
+            String user = c.getUser();
+            String pass = c.getPass();
+
             // Cadena de Conexión
-            cstr = String.format(cpat, prot, host, port, dbnm, user, pass);
-        } catch (Exception e) {
-            throw new ConnectivityException("Parámetros de conexión incorrectos: " + e.getMessage());
-        }
+            String cstr = String.format(cpat, prot, host, port, dbnm, user, pass);
 
-        // Conexión BD
-        try {
+            // Conexión BD
             conn = DriverManager.getConnection(cstr);
-        } catch (SQLException e) {
-            throw new ConnectivityException("Conexión con Base de Datos NO establecida: " + e.getMessage());
-        }
 
-        // Sentencia BD
-        try {
             // Tipo de Acceso
             int tacc = obtenerTipoAcceso(prp);
 
             // Concurrencia
             int conc = obtenerConcurrencia(prp);
 
+            // Sentencia BD
             stmt = conn.createStatement(tacc, conc);
-        } catch (SQLException e) {
-            throw new ConnectivityException("Sentencia de Base de Datos NO establecida: " + e.getMessage());
+        } catch (NullPointerException | SQLException e) {
+            throw new ConnectivityException("Acceso Denegado: "
+                    + e.getMessage());
         }
     }
 
@@ -171,7 +168,7 @@ public final class M3Data implements S3Data {
 
     // Cerrar Artefactos BD
     @Override
-    public final void cerrarBD() throws ConnectivityException {
+    public final void cerrarAccesoDatos() throws ConnectivityException {
         // Cerrar Sentencia de Base de datos
         try {
             stmt.close();

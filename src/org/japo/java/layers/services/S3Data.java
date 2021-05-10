@@ -15,6 +15,7 @@
  */
 package org.japo.java.layers.services;
 
+import org.japo.java.entities.Credencial;
 import org.japo.java.exceptions.ConnectivityException;
 
 /**
@@ -23,9 +24,10 @@ import org.japo.java.exceptions.ConnectivityException;
  */
 public interface S3Data {
 
-    public void conectar(String user, String pass) throws ConnectivityException;
+    public void abrirAccesoDatos(Credencial c)
+            throws ConnectivityException;
 
-    public void cerrarBD() throws ConnectivityException;
+    public void cerrarAccesoDatos() throws ConnectivityException;
 
     // ---
 }

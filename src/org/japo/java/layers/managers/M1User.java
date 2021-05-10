@@ -16,9 +16,11 @@
 package org.japo.java.layers.managers;
 
 import java.util.Properties;
+import org.japo.java.entities.Credencial;
 import org.japo.java.exceptions.ConnectivityException;
 import org.japo.java.layers.services.S2Bussiness;
 import org.japo.java.layers.services.S1User;
+import org.japo.java.libraries.UtilesEntrada;
 
 /**
  *
@@ -28,6 +30,7 @@ public final class M1User implements S1User {
 
     //<editor-fold defaultstate="collapsed" desc="--- User Interface Manager ---">
     // Propiedades Credencial
+    public static final String PRP_CONN_MODE = "jdbc.conn.mode";
     public static final String PRP_CONN_USER = "jdbc.conn.user";
     public static final String PRP_CONN_PASS = "jdbc.conn.pass";
 
@@ -53,21 +56,44 @@ public final class M1User implements S1User {
         String user = prp.getProperty(PRP_CONN_USER);
         String pass = prp.getProperty(PRP_CONN_PASS);
 
-        // Devolver Validación de Usuario
-        bs.conectar(user, pass);
+        // Modo de Conexión
+        String mode = prp.getProperty(PRP_CONN_MODE);
+
+        // Evaluación del modo de conexión
+        if (mode != null && mode.equals("login")) {
+            // Cabecera
+            System.out.println("Acceso a la Aplicación");
+            System.out.println("======================");
+
+            // Entrada de Campos
+            user = UtilesEntrada.leerTexto("Usuario ..............: ");
+            pass = UtilesEntrada.leerTexto("Contraseña ...........: ");
+
+            // Separador
+            System.out.println("---");
+        }
+
+        // Creación de Entidad Credencial
+        Credencial c = new Credencial(user, pass);
+
+        // Conexión de Credenciales
+        bs.abrirAccesoDatos(c);
 
         // Mensaje - Bitácora ( Comentar en producción )
-        System.out.println("Acceso a Datos Establecido");
+        System.out.println("Plantilla de Patrón Estructural por Capas Funcionales");
+        System.out.println("=====================================================");
+        System.out.println("Acceso Establecido");
+        System.out.println("---");
     }
 
     // Cierre de la Aplicación
     @Override
     public final void closeApp() throws ConnectivityException {
         // Cierre Base de Datos
-        bs.cerrarBD();
+        bs.cerrarAccesoDatos();
 
         // Mensaje - Bitácora ( Comentar en producción )
-        System.out.println("Acceso a Datos Liberado");
+        System.out.println("Acceso Finalizado");
 
         // Despedida
         System.out.println("---");
