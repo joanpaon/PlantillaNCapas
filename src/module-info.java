@@ -13,20 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.japo.java.layers.services;
-
-import org.japo.java.entities.Credencial;
-import org.japo.java.exceptions.ConnectivityException;
-
-/**
- *
- * @author José A. Pacheco Ondoño - japolabs@gmail.com
- */
-public interface S2Bussiness {
-
-    public void abrirAccesoDatos(Credencial c) throws ConnectivityException;
-
-    public void cerrarAccesoDatos() throws ConnectivityException;
-
-    // ---
+module PlantillaNCapas {
+    requires org.mariadb.jdbc;
+    requires java.sql;
+    requires java.sql.rowset;
 }

@@ -1,5 +1,5 @@
 /* 
- * Copyright 2021 José A. Pacheco Ondoño - joanpaon@gmail.com.
+ * Copyright 2021 José A. Pacheco Ondoño - japolabs@gmail.com.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -80,8 +80,8 @@ public final class M1User implements S1User {
         bs.abrirAccesoDatos(c);
 
         // Mensaje - Bitácora ( Comentar en producción )
-        System.out.println("Plantilla de Patrón Estructural por Capas Funcionales");
-        System.out.println("=====================================================");
+        System.out.println("Patrón de Diseño Estructural de Capas Funcionales");
+        System.out.println("=================================================");
         System.out.println("Acceso Establecido");
         System.out.println("---");
     }
