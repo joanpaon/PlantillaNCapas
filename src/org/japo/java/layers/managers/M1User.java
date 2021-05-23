@@ -77,7 +77,7 @@ public final class M1User implements S1User {
         Credencial c = new Credencial(user, pass);
 
         // Conexión de Credenciales
-        bs.abrirAccesoDatos(c);
+        bs.loginApp(c);
 
         // Mensaje - Bitácora ( Comentar en producción )
         System.out.println("Patrón de Diseño Estructural de Capas Funcionales");
@@ -90,7 +90,7 @@ public final class M1User implements S1User {
     @Override
     public final void closeApp() throws ConnectivityException {
         // Cierre Base de Datos
-        bs.cerrarAccesoDatos();
+        bs.closeApp();
 
         // Mensaje - Bitácora ( Comentar en producción )
         System.out.println("Acceso Finalizado");

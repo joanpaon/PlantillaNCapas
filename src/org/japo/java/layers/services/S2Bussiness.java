@@ -24,9 +24,9 @@ import org.japo.java.exceptions.ConnectivityException;
  */
 public interface S2Bussiness {
 
-    public void abrirAccesoDatos(Credencial c) throws ConnectivityException;
+    public void loginApp(Credencial c) throws ConnectivityException;
 
-    public void cerrarAccesoDatos() throws ConnectivityException;
+    public void closeApp() throws ConnectivityException;
 
     // ---
 }

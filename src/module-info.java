@@ -14,7 +14,10 @@
  * limitations under the License.
  */
 module PlantillaNCapas {
+    // Driver JDBC MariaDB
     requires org.mariadb.jdbc;
+
+    // API JDBC
     requires java.sql;
     requires java.sql.rowset;
 }

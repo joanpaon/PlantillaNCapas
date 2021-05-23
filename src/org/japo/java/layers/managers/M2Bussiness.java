@@ -45,15 +45,15 @@ public final class M2Bussiness implements S2Bussiness {
 
     // Conectar BD
     @Override
-    public final void abrirAccesoDatos(Credencial c)
+    public final void loginApp(Credencial c)
             throws ConnectivityException {
-        ds.abrirAccesoDatos(c);
+        ds.loginApp(c);
     }
 
     // Desconectar BD
     @Override
-    public final void cerrarAccesoDatos() throws ConnectivityException {
-        ds.cerrarAccesoDatos();
+    public final void closeApp() throws ConnectivityException {
+        ds.closeApp();
     }
     //</editor-fold>
 

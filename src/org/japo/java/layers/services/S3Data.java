@@ -24,10 +24,10 @@ import org.japo.java.exceptions.ConnectivityException;
  */
 public interface S3Data {
 
-    public void abrirAccesoDatos(Credencial c)
+    public void loginApp(Credencial c)
             throws ConnectivityException;
 
-    public void cerrarAccesoDatos() throws ConnectivityException;
+    public void closeApp() throws ConnectivityException;
 
     // ---
 }

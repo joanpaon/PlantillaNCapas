@@ -67,7 +67,7 @@ public final class M3Data implements S3Data {
     }
 
     @Override
-    public final void abrirAccesoDatos(Credencial c)
+    public final void loginApp(Credencial c)
             throws ConnectivityException {
         try {
             // Propiedades > Parámetros Conexión
@@ -168,7 +168,7 @@ public final class M3Data implements S3Data {
 
     // Cerrar Artefactos BD
     @Override
-    public final void cerrarAccesoDatos() throws ConnectivityException {
+    public final void closeApp() throws ConnectivityException {
         // Cerrar Sentencia de Base de datos
         try {
             stmt.close();
