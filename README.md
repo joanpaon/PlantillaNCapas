@@ -2,6 +2,7 @@
 
 Implementación del Patrón de Diseño N Capas en una Aplicación Java de Escritorio
 
+<pre>
 Plataforma ....: Java 11 ( Windows )
 IDE ...........: NetBeans 12.3 ( Windows )
 Proyecto ......: Java with Ant ( Desktop )
@@ -11,3 +12,4 @@ Base de Datos .: MariaDB ( XAMPP 8 )
 Driver JDBC ...: mariadb-java-client-2.7.2.jar
 Dependencias ..: Manual (lib/*.jar)
 Interfaz ......: E/S Estándar
+<pre>
