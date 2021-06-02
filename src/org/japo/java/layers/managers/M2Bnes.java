@@ -18,14 +18,14 @@ package org.japo.java.layers.managers;
 import java.util.Properties;
 import org.japo.java.entities.Credencial;
 import org.japo.java.exceptions.ConnectivityException;
-import org.japo.java.layers.services.S2Bussiness;
 import org.japo.java.layers.services.S3Data;
+import org.japo.java.layers.services.S2Bnes;
 
 /**
  *
  * @author José A. Pacheco Ondoño - joanpaon@gmail.com
  */
-public final class M2Bussiness implements S2Bussiness {
+public final class M2Bnes implements S2Bnes {
 
     //<editor-fold defaultstate="collapsed" desc="--- Bussiness Logic Manager ---">
     // Propiedades de la Aplicación
@@ -35,7 +35,7 @@ public final class M2Bussiness implements S2Bussiness {
     private final S3Data ds;
 
     // Constructor Parametrizado
-    public M2Bussiness(Properties prp, S3Data ds) {
+    public M2Bnes(Properties prp, S3Data ds) {
         // Propiedades Aplicación
         this.prp = prp;
 

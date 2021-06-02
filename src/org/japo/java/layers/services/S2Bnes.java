@@ -22,7 +22,7 @@ import org.japo.java.exceptions.ConnectivityException;
  *
  * @author José A. Pacheco Ondoño - japolabs@gmail.com
  */
-public interface S2Bussiness {
+public interface S2Bnes {
 
     public void loginApp(Credencial c) throws ConnectivityException;
 

@@ -18,9 +18,9 @@ package org.japo.java.layers.managers;
 import java.util.Properties;
 import org.japo.java.entities.Credencial;
 import org.japo.java.exceptions.ConnectivityException;
-import org.japo.java.layers.services.S2Bussiness;
 import org.japo.java.layers.services.S1User;
 import org.japo.java.libraries.UtilesEntrada;
+import org.japo.java.layers.services.S2Bnes;
 
 /**
  *
@@ -38,10 +38,10 @@ public final class M1User implements S1User {
     private final Properties prp;
 
     // Gestor Lógica de Negocio
-    private final S2Bussiness bs;
+    private final S2Bnes bs;
 
     // Constructor Parametrizado
-    public M1User(Properties prp, S2Bussiness bs) {
+    public M1User(Properties prp, S2Bnes bs) {
         // Propiedades Aplicación
         this.prp = prp;
 
@@ -80,9 +80,8 @@ public final class M1User implements S1User {
         bs.loginApp(c);
 
         // Mensaje - Bitácora ( Comentar en producción )
-        System.out.println("Patrón de Diseño Estructural de Capas Funcionales");
-        System.out.println("=================================================");
-        System.out.println("Acceso Establecido");
+        System.out.println("Plantilla N Capas");
+        System.out.println("Acceso a Datos Establecido");
         System.out.println("---");
     }
 
@@ -93,10 +92,8 @@ public final class M1User implements S1User {
         bs.closeApp();
 
         // Mensaje - Bitácora ( Comentar en producción )
-        System.out.println("Acceso Finalizado");
-
-        // Despedida
         System.out.println("---");
+        System.out.println("Acceso a Datos Liberado");
         System.out.println("Copyright JAPO Labs - Servicios Informáticos");
     }
     //</editor-fold>
@@ -104,7 +101,7 @@ public final class M1User implements S1User {
     // Ejecución de la Aplicación
     @Override
     public final void launchApp() {
-        // ---
+        System.out.println("Lógica de la Aplicación");
     }
 
     // Lógica de Usuario Adicional
